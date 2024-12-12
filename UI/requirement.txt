@@ -1,0 +1,8 @@
+pandas
+matplotlib
+seaborn
+os
+pickle
+streamlit
+statsmodels
+mlxtend

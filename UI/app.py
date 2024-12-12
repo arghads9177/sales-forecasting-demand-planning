@@ -3,13 +3,10 @@ import pandas as pd
 import pickle
 import matplotlib.pyplot as plt
 import seaborn as sns
-import json
 import os
 
 # Libraries for Time Series Analysis
 from statsmodels.tsa.seasonal import seasonal_decompose
-from statsmodels.tsa.stattools import adfuller
-from pandas.plotting import autocorrelation_plot
 from mlxtend.frequent_patterns import apriori, association_rules
 
 
