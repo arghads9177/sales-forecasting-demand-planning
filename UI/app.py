@@ -1,13 +1,37 @@
 import streamlit as st
 import pandas as pd
 import pickle
-import matplotlib.pyplot as plt
-import seaborn as sns
+# import matplotlib.pyplot as plt
+# import seaborn as sns
 import os
+import sys
+import subprocess
 
+try:
+    import matplotlib.pyplot as plt
+except ModuleNotFoundError:
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "matplotlib"])
+    import matplotlib.pyplot as plt
+try:
+    import seaborn as sns
+except ModuleNotFoundError:
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "seaborn"])
+    import seaborn as sns
+    
 # Libraries for Time Series Analysis
-from statsmodels.tsa.seasonal import seasonal_decompose
-from mlxtend.frequent_patterns import apriori, association_rules
+
+try:
+    from statsmodels.tsa.seasonal import seasonal_decompose
+except ModuleNotFoundError:
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "statsmodels"])
+    from statsmodels.tsa.seasonal import seasonal_decompose
+
+try:
+    from mlxtend.frequent_patterns import apriori, association_rules
+except ModuleNotFoundError:
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "mlxtend"])
+    from mlxtend.frequent_patterns import apriori, association_rules
+
 
 
 def link_style_menu():
@@ -57,7 +81,7 @@ def main():
         st.subheader("Future Sales Prediction")
         try:
             # Load the optimized Prophet model
-            with open("../models/sf_prophet.pkl", "rb") as f:
+            with open("./models/sf_prophet.pkl", "rb") as f:
                 prophet_model = pickle.load(f)
             # Sidebar for user input
             st.header("Forecast Parameters")
@@ -66,7 +90,7 @@ def main():
             # Generate future dataframe
             st.header(f"Forecast for the Next {months_to_forecast} Months")
             last_date = prophet_model.history["ds"].max()
-            future_dates = prophet_model.make_future_dataframe(periods=months_to_forecast, freq="M")
+            future_dates = prophet_model.make_future_dataframe(periods=months_to_forecast, freq="ME")
             forecast = prophet_model.predict(future_dates)
 
             # Filter the forecast for the selected range
@@ -93,7 +117,7 @@ def main():
     # Time Series Analysis
     elif choice == "Time Series Analysis":
         st.subheader("Time Series Analysis")
-        data_path = "../data"
+        data_path = "./data"
         csv_path = os.path.join(data_path, "ssf_cleaned.csv")
         data = pd.read_csv(csv_path)
         data['Date'] = pd.to_datetime(data['Date'])
@@ -150,7 +174,7 @@ def main():
         """)
         # Monthly Sales
         fig, ax = plt.subplots(figsize=(15, 6))
-        plt.plot(data["Sales"].resample('M').sum(), label= "Weekly Sales")
+        plt.plot(data["Sales"].resample('ME').sum(), label= "Monthly Sales")
         plt.xlabel("Day")
         plt.ylabel('Sales')
         plt.title("Monthly Sales")
@@ -179,7 +203,7 @@ def main():
         st.markdown("## **Decompose the Time Series**")
         st.markdown("Apply seasonal decomposition using moving averages to extract trend, seasonality, and residual components.")
         # Resample(Upsampling) the data to monthly
-        df_monthly = data.resample("M").sum()
+        df_monthly = data.resample("ME").sum()
         # Seasonal Decomposition of monthly sales
         decomposed = seasonal_decompose(df_monthly["Sales"], model= "multiplicative", period= 12)
         fig, ax = plt.subplots(4, 1, figsize=(12, 10))
@@ -249,7 +273,7 @@ def main():
     # Demographic Analysis
     elif choice == "Demographic Analysis":
         st.subheader("Demographic Analysis")
-        data_path = "../data"
+        data_path = "./data"
         csv_path = os.path.join(data_path, "stores_sales_forecasting.csv")
         data = pd.read_csv(csv_path, encoding="latin1")
         # Find State of customers
@@ -300,7 +324,7 @@ def main():
     # Sub-Category Performance Analysis
     elif choice == "Sub-Category Performance Analysis":
         st.subheader("Sub-Category Performance Analysis")
-        data_path = "../data"
+        data_path = "./data"
         csv_path = os.path.join(data_path, "stores_sales_forecasting.csv")
         data = pd.read_csv(csv_path, encoding="latin1")
         # Find Sub-Category of customers
@@ -413,7 +437,7 @@ def main():
     # Product Performance Analysis
     elif choice == "Product Performance Analysis":
         st.subheader("Product Performance Analysis")
-        data_path = "../data"
+        data_path = "./data"
         csv_path = os.path.join(data_path, "stores_sales_forecasting.csv")
         data = pd.read_csv(csv_path, encoding="latin1")
 
@@ -551,7 +575,7 @@ def main():
         # Market Basket Analysis
     elif choice == "Market Basket Analysis":
         st.subheader("Market Basket Analysis")
-        data_path = "../data"
+        data_path = "./data"
         csv_path = os.path.join(data_path, "stores_sales_forecasting.csv")
         data = pd.read_csv(csv_path, encoding="latin1")
         # Prepare Data: Convert the data to basket format
@@ -560,7 +584,7 @@ def main():
         # Find frequent itemsets with a minimum support threshold
         frequent_itemsets = apriori(basket, min_support=0.01, use_colnames=True)
         # Generate Association rules
-        rules = association_rules(frequent_itemsets, metric= "lift", min_threshold= 0.3)
+        rules = association_rules(frequent_itemsets, data.shape[0], metric= "lift", min_threshold= 0.3)
 
         # Visualize top 10 rules by Lift
         top_rules = rules.head(10)
