@@ -116,3 +116,14 @@ This dataset provides historical sales data for the retail furniture sector, ser
 ## Conclusion  
 
 This project equips retail businesses with powerful forecasting tools to make data-driven decisions. By understanding historical sales patterns, businesses can optimize inventory, enhance production efficiency, and maximize profitability while maintaining customer satisfaction.
+
+## Installation Guide
+
+1. Intall python 3.11 in your system. from the following link https://www.python.org/downloads/
+2. Install miniconda from the following link https://www.anaconda.com/download/success#miniconda
+3. Open your Command Prompt or Terminal
+4. Create the virtual environment `conda create -p venv`
+5. Activate the virtual environment `conda activate venv\`
+6. Install necessary packages `pip install -r UI\requirements.txt`
+7. Move to the UI `cd UI`
+7. Run the Application `streamlit run app.py`

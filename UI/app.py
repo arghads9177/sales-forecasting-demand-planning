@@ -81,7 +81,7 @@ def main():
         st.subheader("Future Sales Prediction")
         try:
             # Load the optimized Prophet model
-            with open("./models/sf_prophet.pkl", "rb") as f:
+            with open("../models/sf_prophet.pkl", "rb") as f:
                 prophet_model = pickle.load(f)
             # Sidebar for user input
             st.header("Forecast Parameters")
@@ -117,7 +117,7 @@ def main():
     # Time Series Analysis
     elif choice == "Time Series Analysis":
         st.subheader("Time Series Analysis")
-        data_path = "./data"
+        data_path = "../data"
         csv_path = os.path.join(data_path, "ssf_cleaned.csv")
         data = pd.read_csv(csv_path)
         data['Date'] = pd.to_datetime(data['Date'])
@@ -273,7 +273,7 @@ def main():
     # Demographic Analysis
     elif choice == "Demographic Analysis":
         st.subheader("Demographic Analysis")
-        data_path = "./data"
+        data_path = "../data"
         csv_path = os.path.join(data_path, "stores_sales_forecasting.csv")
         data = pd.read_csv(csv_path, encoding="latin1")
         # Find State of customers
@@ -324,7 +324,7 @@ def main():
     # Sub-Category Performance Analysis
     elif choice == "Sub-Category Performance Analysis":
         st.subheader("Sub-Category Performance Analysis")
-        data_path = "./data"
+        data_path = "../data"
         csv_path = os.path.join(data_path, "stores_sales_forecasting.csv")
         data = pd.read_csv(csv_path, encoding="latin1")
         # Find Sub-Category of customers
@@ -437,7 +437,7 @@ def main():
     # Product Performance Analysis
     elif choice == "Product Performance Analysis":
         st.subheader("Product Performance Analysis")
-        data_path = "./data"
+        data_path = "../data"
         csv_path = os.path.join(data_path, "stores_sales_forecasting.csv")
         data = pd.read_csv(csv_path, encoding="latin1")
 
@@ -575,7 +575,7 @@ def main():
         # Market Basket Analysis
     elif choice == "Market Basket Analysis":
         st.subheader("Market Basket Analysis")
-        data_path = "./data"
+        data_path = "../data"
         csv_path = os.path.join(data_path, "stores_sales_forecasting.csv")
         data = pd.read_csv(csv_path, encoding="latin1")
         # Prepare Data: Convert the data to basket format
